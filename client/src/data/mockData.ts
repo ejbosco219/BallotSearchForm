@@ -44,31 +44,10 @@ function randomElement<T>(arr: T[]): T {
 function generateVoters(count: number): Voter[] {
   const voters: Voter[] = [];
   
-  // Add our specific test cases first to ensure they exist
-  voters.push(
-    {
-      _id: "v_fixed_1",
-      firstName: "Alexandra",
-      lastName: "Hamilton",
-      address: { streetNumber: "123", street: "Maple Avenue", city: "Springfield", state: "IL", zipCode: "62704" },
-      voterId: "V10001",
-      partyAffiliation: "Democrat",
-      status: "Active"
-    },
-    {
-      _id: "v_fixed_2",
-      firstName: "Robert",
-      lastName: "Smith",
-      address: { streetNumber: "45", street: "Oak Street", city: "Springfield", state: "IL", zipCode: "62704" },
-      voterId: "V10004",
-      partyAffiliation: "Democrat",
-      status: "Active"
-    }
-  );
-
-  for (let i = 0; i < count - 2; i++) {
-    const fn = randomElement(firstNames);
-    const ln = randomElement(lastNames);
+  for (let i = 0; i < count; i++) {
+    // Create some "noise" by repeating names intentionally to cause broad matching
+    const fn = i % 10 === 0 ? "John" : randomElement(firstNames); // 10% are Johns
+    const ln = i % 10 === 0 ? "Smith" : randomElement(lastNames); // 10% are Smiths
     const stNum = randomInt(1, 9999).toString();
     const stName = `${randomElement(streetNames)} ${randomElement(streetTypes)}`;
     const city = randomElement(cities);
@@ -94,15 +73,26 @@ function generateVoters(count: number): Voter[] {
 
 function generateBallots(count: number, voters: Voter[]): BallotSheetItem[] {
   const ballots: BallotSheetItem[] = [];
-  const guaranteedMatches = 30;
   
-  // 1. Generate guaranteed matches
-  for (let i = 0; i < guaranteedMatches; i++) {
-    // Pick a voter from the list (using modulo to be safe, though we have 200 voters)
-    const voter = voters[i % voters.length];
+  // We want ALL ballots to have a match in the voter DB
+  // So we pick `count` random voters from the `voters` array
+  
+  // Create a shuffled copy of indices to pick unique voters
+  const voterIndices = Array.from({ length: voters.length }, (_, i) => i);
+  // Shuffle
+  for (let i = voterIndices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [voterIndices[i], voterIndices[j]] = [voterIndices[j], voterIndices[i]];
+  }
+  
+  // Take the first `count` indices
+  const selectedIndices = voterIndices.slice(0, count);
+
+  for (let i = 0; i < count; i++) {
+    const voter = voters[selectedIndices[i]];
     
-    // 10% chance of a slight typo, but still intended to be a match
-    const typo = Math.random() > 0.9; 
+    // 20% chance of a slight typo to make searching interesting
+    const typo = Math.random() > 0.8; 
     
     let namePrinted = `${voter.firstName} ${voter.lastName}`;
     if (typo) {
@@ -123,26 +113,10 @@ function generateBallots(count: number, voters: Voter[]): BallotSheetItem[] {
       }
     });
   }
-
-  // 2. Generate the rest as random (non-matches or accidental matches)
-  for (let i = guaranteedMatches; i < count; i++) {
-    // Random ballot
-    ballots.push({
-      _id: `b_random_${i}`,
-      nameprinted: `${randomElement(firstNames)} ${randomElement(lastNames)}`,
-      registeredaddress: {
-        streetNumber: randomInt(1, 9999).toString(),
-        streetName: `${randomElement(streetNames)} ${randomElement(streetTypes)}`,
-        city: randomElement(cities),
-        state: "IL",
-        zip: randomInt(60000, 62999).toString()
-      }
-    });
-  }
   
-  // Shuffle the ballots so the matches aren't just the first 30
   return ballots.sort(() => Math.random() - 0.5);
 }
 
-export const mockVoters = generateVoters(200);
+// 100 Voters, 50 Ballots (2:1 ratio as requested)
+export const mockVoters = generateVoters(100);
 export const mockBallotSheets = generateBallots(50, mockVoters);
