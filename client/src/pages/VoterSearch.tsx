@@ -84,8 +84,8 @@ export default function VoterSearch() {
   });
 
   // State for Results
-  const [results, setResults] = useState<Voter[]>([]);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [results, setResults] = useState<Voter[]>(mockVoters);
+  const [hasSearched, setHasSearched] = useState(true);
 
   // State for Configuration
   const [configOpen, setConfigOpen] = useState(false);
@@ -109,8 +109,8 @@ export default function VoterSearch() {
         streetName: ""
       });
       // Reset results
-      setResults([]);
-      setHasSearched(false);
+      setResults(mockVoters);
+      setHasSearched(true);
     }
   }, [currentBallotIndex, currentBallot]);
 
