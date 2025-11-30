@@ -94,49 +94,54 @@ function generateVoters(count: number): Voter[] {
 
 function generateBallots(count: number, voters: Voter[]): BallotSheetItem[] {
   const ballots: BallotSheetItem[] = [];
+  const guaranteedMatches = 30;
   
-  // Generate ballots that mostly match existing voters, but with some errors/typos
-  for (let i = 0; i < count; i++) {
-    const useExistingVoter = Math.random() > 0.3; // 70% chance to base on real voter
+  // 1. Generate guaranteed matches
+  for (let i = 0; i < guaranteedMatches; i++) {
+    // Pick a voter from the list (using modulo to be safe, though we have 200 voters)
+    const voter = voters[i % voters.length];
     
-    if (useExistingVoter) {
-      const voter = randomElement(voters);
-      const typo = Math.random() > 0.8; // 20% chance of typo
-      
-      let namePrinted = `${voter.firstName} ${voter.lastName}`;
-      if (typo) {
-        // Simple typo simulation: remove last char or duplicate first char
-        if (Math.random() > 0.5) namePrinted = namePrinted.slice(0, -1);
-        else namePrinted = namePrinted + namePrinted.charAt(namePrinted.length - 1);
-      }
-
-      ballots.push({
-        _id: `b_${i}`,
-        nameprinted: namePrinted,
-        registeredaddress: {
-          streetNumber: voter.address.streetNumber,
-          streetName: voter.address.street,
-          city: voter.address.city,
-          state: voter.address.state,
-          zip: voter.address.zipCode
-        }
-      });
-    } else {
-      // Totally random ballot
-      ballots.push({
-        _id: `b_${i}`,
-        nameprinted: `${randomElement(firstNames)} ${randomElement(lastNames)}`,
-        registeredaddress: {
-          streetNumber: randomInt(1, 9999).toString(),
-          streetName: `${randomElement(streetNames)} ${randomElement(streetTypes)}`,
-          city: randomElement(cities),
-          state: "IL",
-          zip: randomInt(60000, 62999).toString()
-        }
-      });
+    // 10% chance of a slight typo, but still intended to be a match
+    const typo = Math.random() > 0.9; 
+    
+    let namePrinted = `${voter.firstName} ${voter.lastName}`;
+    if (typo) {
+      // Simple typo: remove last char or add a period
+      if (Math.random() > 0.5) namePrinted = namePrinted.slice(0, -1);
+      else namePrinted = namePrinted + ".";
     }
+
+    ballots.push({
+      _id: `b_match_${i}`,
+      nameprinted: namePrinted,
+      registeredaddress: {
+        streetNumber: voter.address.streetNumber,
+        streetName: voter.address.street,
+        city: voter.address.city,
+        state: voter.address.state,
+        zip: voter.address.zipCode
+      }
+    });
   }
-  return ballots;
+
+  // 2. Generate the rest as random (non-matches or accidental matches)
+  for (let i = guaranteedMatches; i < count; i++) {
+    // Random ballot
+    ballots.push({
+      _id: `b_random_${i}`,
+      nameprinted: `${randomElement(firstNames)} ${randomElement(lastNames)}`,
+      registeredaddress: {
+        streetNumber: randomInt(1, 9999).toString(),
+        streetName: `${randomElement(streetNames)} ${randomElement(streetTypes)}`,
+        city: randomElement(cities),
+        state: "IL",
+        zip: randomInt(60000, 62999).toString()
+      }
+    });
+  }
+  
+  // Shuffle the ballots so the matches aren't just the first 30
+  return ballots.sort(() => Math.random() - 0.5);
 }
 
 export const mockVoters = generateVoters(200);
