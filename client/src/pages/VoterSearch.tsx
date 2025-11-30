@@ -11,6 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -18,7 +27,9 @@ import {
   MapPin,
   Database,
   FileText,
-  Filter
+  Filter,
+  Settings,
+  CheckCircle
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +41,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
 
 type MatchType = "Starts" | "Within" | "Ends";
 
@@ -47,6 +59,8 @@ interface SearchFormMatchers {
 }
 
 export default function VoterSearch() {
+  const { toast } = useToast();
+
   // State for Ballot Sheet Navigation
   const [currentBallotIndex, setCurrentBallotIndex] = useState(0);
   const currentBallot = mockBallotSheets[currentBallotIndex];
@@ -68,6 +82,14 @@ export default function VoterSearch() {
   // State for Results
   const [results, setResults] = useState<Voter[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+
+  // State for Configuration
+  const [configOpen, setConfigOpen] = useState(false);
+  const [dbConfig, setDbConfig] = useState({
+    ballotDb: "",
+    voterDb: ""
+  });
+  const [isConnected, setIsConnected] = useState(false);
 
   // Effect to prefill form when ballot changes
   useEffect(() => {
@@ -107,6 +129,15 @@ export default function VoterSearch() {
 
   const handleMatcherChange = (field: keyof SearchFormMatchers, value: MatchType) => {
     setMatchers(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleConfigSave = () => {
+    setIsConnected(true);
+    setConfigOpen(false);
+    toast({
+      title: "Configuration Saved",
+      description: "Database connection strings have been stored.",
+    });
   };
 
   const generateQueryString = () => {
@@ -180,8 +211,51 @@ export default function VoterSearch() {
             <p className="text-slate-500">Match ballot sheet entries to the voter registration database.</p>
           </div>
           <div className="flex items-center gap-2">
-             <Badge variant="outline" className="px-3 py-1 bg-white text-slate-600 border-slate-200">
-               <Database className="w-3 h-3 mr-2" /> Connected
+             <Dialog open={configOpen} onOpenChange={setConfigOpen}>
+               <DialogTrigger asChild>
+                 <Button variant="outline" size="sm" className="gap-2 bg-white" data-testid="button-settings">
+                   <Settings className="w-4 h-4" />
+                   Configure Database
+                 </Button>
+               </DialogTrigger>
+               <DialogContent className="sm:max-w-[500px]">
+                 <DialogHeader>
+                   <DialogTitle>Database Configuration</DialogTitle>
+                   <DialogDescription>
+                     Enter the MongoDB connection strings for the ballot and voter databases.
+                   </DialogDescription>
+                 </DialogHeader>
+                 <div className="grid gap-4 py-4">
+                   <div className="space-y-2">
+                     <Label htmlFor="ballot-db">Ballot Sheet Database Connection String</Label>
+                     <Input 
+                       id="ballot-db" 
+                       placeholder="mongodb://..." 
+                       value={dbConfig.ballotDb}
+                       onChange={(e) => setDbConfig({...dbConfig, ballotDb: e.target.value})}
+                     />
+                   </div>
+                   <div className="space-y-2">
+                     <Label htmlFor="voter-db">Voter Database Connection String</Label>
+                     <Input 
+                       id="voter-db" 
+                       placeholder="mongodb://..." 
+                       value={dbConfig.voterDb}
+                       onChange={(e) => setDbConfig({...dbConfig, voterDb: e.target.value})}
+                     />
+                   </div>
+                 </div>
+                 <DialogFooter>
+                   <Button onClick={handleConfigSave} className="bg-blue-600 hover:bg-blue-700">
+                     Save Configuration
+                   </Button>
+                 </DialogFooter>
+               </DialogContent>
+             </Dialog>
+
+             <Badge variant="outline" className={`px-3 py-1 border transition-colors ${isConnected ? "bg-green-50 text-green-700 border-green-200" : "bg-white text-slate-600 border-slate-200"}`}>
+               {isConnected ? <CheckCircle className="w-3 h-3 mr-2" /> : <Database className="w-3 h-3 mr-2" />} 
+               {isConnected ? "Connected" : "Mock Mode"}
              </Badge>
           </div>
         </div>
