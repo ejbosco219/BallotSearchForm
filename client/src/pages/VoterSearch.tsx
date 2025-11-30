@@ -96,7 +96,7 @@ export default function VoterSearch() {
   const [isConnected, setIsConnected] = useState(false);
 
   // New State for "Challenge Mode"
-  const [showPrintedInfo, setShowPrintedInfo] = useState(true);
+  const [showPrintedInfo, setShowPrintedInfo] = useState(false);
 
   // Effect to reset form when ballot changes (but NOT prefill)
   useEffect(() => {
@@ -332,9 +332,10 @@ export default function VoterSearch() {
               
               {/* Handwritten Version */}
               <div className="relative mt-4 p-8 bg-[#fffef0] border border-yellow-200 shadow-sm rotate-1 rounded-sm overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper.png')] opacity-50 mix-blend-multiply"></div>
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper.png')] opacity-60 mix-blend-multiply"></div>
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-multiply"></div>
                 <div className="absolute -top-2 -left-2 w-4 h-4 bg-gray-200 rounded-full opacity-50"></div>
-                <p className="relative font-['Zeyada'] text-6xl text-blue-900/70 transform -rotate-2 tracking-tighter leading-none blur-[0.5px]" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.1)' }}>
+                <p className="relative font-['Meddon'] text-6xl text-blue-900/60 transform -rotate-3 skew-x-12 tracking-tighter leading-none blur-[1.5px] select-none" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.15)' }}>
                   {currentBallot.nameprinted.toLowerCase()}
                 </p>
               </div>
@@ -354,9 +355,10 @@ export default function VoterSearch() {
 
               {/* Handwritten Version */}
               <div className="relative mt-4 p-8 bg-[#fffef0] border border-yellow-200 shadow-sm -rotate-1 rounded-sm overflow-hidden">
-                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper.png')] opacity-50 mix-blend-multiply"></div>
+                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper.png')] opacity-60 mix-blend-multiply"></div>
+                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-multiply"></div>
                  <div className="absolute -top-2 -right-2 w-4 h-4 bg-gray-200 rounded-full opacity-50"></div>
-                 <p className="relative font-['Zeyada'] text-5xl text-blue-900/70 transform rotate-1 leading-tight blur-[0.6px] skew-x-6" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.1)' }}>
+                 <p className="relative font-['Meddon'] text-5xl text-blue-900/60 transform rotate-2 skew-y-3 leading-tight blur-[1.2px] select-none" style={{ textShadow: '2px 2px 3px rgba(0,0,0,0.15)' }}>
                    {currentBallot.registeredaddress.streetNumber} {currentBallot.registeredaddress.streetName}
                    <br/>
                    {currentBallot.registeredaddress.city}, {currentBallot.registeredaddress.state}
