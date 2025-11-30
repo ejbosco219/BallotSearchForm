@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "_id",
+    "__v",
+    "address",
+    "compositeKey",
+    "county",
+    "createdAt",
+    "embedding",
+    "firstName",
+    "importBatch",
+    "lastName",
+    "name",
+    "processedAt",
+    "updatedAt",
+    "voterId"
+  ],
+  "properties": {
+    "_id": {
+      "$ref": "#/$defs/ObjectId"
+    },
+    "__v": {
+      "type": "integer"
+    },
+    "address": {
+      "type": "object",
+      "required": [
+        "city",
+        "country",
+        "county",
+        "state",
+        "street",
+        "streetNumber",
+        "unit",
+        "zipCode"
+      ],
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "county": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "streetNumber": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "zipCode": {
+          "type": "string"
+        }
+      }
+    },
+    "compositeKey": {
+      "type": "string"
+    },
+    "county": {
+      "type": "string"
+    },
+    "createdAt": {
+      "$ref": "#/$defs/Date"
+    },
+    "dateOfBirth": {
+      "type": "string"
+    },
+    "embedding": {
+      "type": "array",
+      "items": {
+        "type": []
+      }
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": []
+      }
+    },
+    "importBatch": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "middleName": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "partyAffiliation": {
+      "type": "string"
+    },
+    "processedAt": {
+      "$ref": "#/$defs/Date"
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "_id",
+          "createdAt",
+          "key",
+          "projectInfo"
+        ],
+        "properties": {
+          "_id": {
+            "$ref": "#/$defs/ObjectId"
+          },
+          "createdAt": {
+            "$ref": "#/$defs/Date"
+          },
+          "key": {
+            "type": "object",
+            "required": [
+              "identityId",
+              "rowImageKey"
+            ],
+            "properties": {
+              "identityId": {
+                "type": "string"
+              },
+              "rowImageKey": {
+                "type": "string"
+              }
+            }
+          },
+          "projectInfo": {
+            "type": "object",
+            "required": [
+              "petitioner",
+              "project",
+              "reviewed",
+              "turnIn"
+            ],
+            "properties": {
+              "coordinator": {
+                "type": "string"
+              },
+              "identityId": {
+                "type": "string"
+              },
+              "petitioner": {
+                "type": "string"
+              },
+              "project": {
+                "type": "string"
+              },
+              "reviewed": {
+                "type": "boolean"
+              },
+              "turnIn": {
+                "type": "string"
+              }
+            }
+          },
+          "signedDate": {
+            "$ref": "#/$defs/Date"
+          }
+        }
+      }
+    },
+    "title": {
+      "type": "string"
+    },
+    "updatedAt": {
+      "$ref": "#/$defs/Date"
+    },
+    "voterId": {
+      "type": "string"
+    },
+    "voterStatus": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "ObjectId": {
+      "type": "object",
+      "properties": {
+        "$oid": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{24}$"
+        }
+      },
+      "required": [
+        "$oid"
+      ],
+      "additionalProperties": false
+    },
+    "Date": {
+      "type": "object",
+      "properties": {
+        "$date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "$date"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

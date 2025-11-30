@@ -1,0 +1,1198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "_id",
+    "file",
+    "identityId",
+    "passOneValidator",
+    "passTwoValidator",
+    "turnIn",
+    "updatedAt",
+    "validator"
+  ],
+  "properties": {
+    "_id": {
+      "$ref": "#/$defs/ObjectId"
+    },
+    "__v": {
+      "type": "integer"
+    },
+    "autoValidatedCount": {
+      "type": "integer"
+    },
+    "batch": {
+      "$ref": "#/$defs/ObjectId"
+    },
+    "createdAt": {
+      "$ref": "#/$defs/Date"
+    },
+    "error": {
+      "type": "string"
+    },
+    "extractStatus": {
+      "type": "string"
+    },
+    "file": {
+      "type": "string"
+    },
+    "highConfidenceCount": {
+      "type": "integer"
+    },
+    "identityId": {
+      "type": "string"
+    },
+    "manualValidatedCount": {
+      "type": "integer"
+    },
+    "mergedResults": {
+      "type": "object",
+      "required": [
+        "confidenceSummary",
+        "rows"
+      ],
+      "properties": {
+        "confidenceSummary": {
+          "type": "object",
+          "required": [
+            "highConfidenceRows",
+            "percentHighConfidence",
+            "totalRows"
+          ],
+          "properties": {
+            "highConfidenceRows": {
+              "type": "integer"
+            },
+            "percentHighConfidence": {
+              "type": "integer"
+            },
+            "totalRows": {
+              "type": "integer"
+            }
+          }
+        },
+        "formFields": {
+          "type": "object",
+          "required": [
+            "city",
+            "formType",
+            "otherFields",
+            "pageNumber",
+            "state",
+            "totalRows",
+            "totalSignatures"
+          ],
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "formType": {
+              "type": "string"
+            },
+            "otherFields": {
+              "type": "string"
+            },
+            "pageNumber": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "totalRows": {
+              "type": "integer"
+            },
+            "totalSignatures": {
+              "type": "integer"
+            }
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "_id",
+              "autoValidator",
+              "expertNeeded",
+              "id",
+              "isHighConfidence",
+              "needsValidation",
+              "selectedVoter",
+              "sourceModels",
+              "validated"
+            ],
+            "properties": {
+              "_id": {
+                "$ref": "#/$defs/ObjectId"
+              },
+              "autoValidator": {
+                "type": "object",
+                "required": [
+                  "enabled",
+                  "name"
+                ],
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "expertNeeded": {
+                "type": "boolean"
+              },
+              "id": {
+                "type": "integer"
+              },
+              "isHighConfidence": {
+                "type": "boolean"
+              },
+              "needsValidation": {
+                "type": "boolean"
+              },
+              "selectedVoter": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "_id",
+                      "address",
+                      "compositeKey",
+                      "firstName",
+                      "lastName",
+                      "matchCount",
+                      "name",
+                      "searchScore",
+                      "title",
+                      "voterId"
+                    ],
+                    "properties": {
+                      "_id": {
+                        "$ref": "#/$defs/ObjectId"
+                      },
+                      "address": {
+                        "type": "object",
+                        "required": [
+                          "city",
+                          "county",
+                          "state",
+                          "street",
+                          "unit",
+                          "zipCode"
+                        ],
+                        "properties": {
+                          "city": {
+                            "type": "string"
+                          },
+                          "county": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "street": {
+                            "type": "string"
+                          },
+                          "unit": {
+                            "type": "string"
+                          },
+                          "zipCode": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "compositeKey": {
+                        "type": "string"
+                      },
+                      "dateOfBirth": {
+                        "type": "string"
+                      },
+                      "exactAddressMatch": {
+                        "type": "integer"
+                      },
+                      "firstName": {
+                        "type": "string"
+                      },
+                      "fullAddressMatch": {
+                        "type": "integer"
+                      },
+                      "lastName": {
+                        "type": "string"
+                      },
+                      "matchCount": {
+                        "type": "integer"
+                      },
+                      "middleName": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "nameMatchScore": {
+                        "type": "integer"
+                      },
+                      "partyAffiliation": {
+                        "type": "string"
+                      },
+                      "searchScore": {
+                        "$ref": "#/$defs/Double"
+                      },
+                      "signatures": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "_id",
+                            "createdAt",
+                            "key",
+                            "projectInfo"
+                          ],
+                          "properties": {
+                            "_id": {
+                              "$ref": "#/$defs/ObjectId"
+                            },
+                            "createdAt": {
+                              "$ref": "#/$defs/Date"
+                            },
+                            "key": {
+                              "type": "object",
+                              "required": [
+                                "rowImageKey"
+                              ],
+                              "properties": {
+                                "identityId": {
+                                  "type": "string"
+                                },
+                                "rowImageKey": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "projectInfo": {
+                              "type": "object",
+                              "required": [
+                                "petitioner",
+                                "project",
+                                "reviewed",
+                                "turnIn"
+                              ],
+                              "properties": {
+                                "coordinator": {
+                                  "type": "string"
+                                },
+                                "identityId": {
+                                  "type": "string"
+                                },
+                                "petitioner": {
+                                  "type": "string"
+                                },
+                                "project": {
+                                  "type": "string"
+                                },
+                                "reviewed": {
+                                  "type": "boolean"
+                                },
+                                "turnIn": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "signedDate": {
+                              "$ref": "#/$defs/Date"
+                            }
+                          }
+                        }
+                      },
+                      "streetTypeMatch": {
+                        "type": "integer"
+                      },
+                      "streetTypeMatchScore": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "voterId": {
+                        "type": "string"
+                      },
+                      "voterStatus": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "sourceModels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "validated": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "modelResults": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "_id",
+          "modelName",
+          "processedAt",
+          "result",
+          "success"
+        ],
+        "properties": {
+          "_id": {
+            "$ref": "#/$defs/ObjectId"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "processedAt": {
+            "$ref": "#/$defs/Date"
+          },
+          "result": {
+            "type": "object",
+            "required": [
+              "confidenceSummary",
+              "formFields",
+              "headers",
+              "metadata",
+              "rows"
+            ],
+            "properties": {
+              "confidenceSummary": {
+                "type": "object",
+                "required": [
+                  "highConfidenceRows",
+                  "percentHighConfidence",
+                  "totalRows"
+                ],
+                "properties": {
+                  "highConfidenceRows": {
+                    "type": "integer"
+                  },
+                  "percentHighConfidence": {
+                    "type": "integer"
+                  },
+                  "totalRows": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "formFields": {
+                "type": "object",
+                "required": [
+                  "city",
+                  "formType",
+                  "state",
+                  "totalRows",
+                  "totalSignatures"
+                ],
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "formType": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "totalRows": {
+                    "type": "integer"
+                  },
+                  "totalSignatures": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "headers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "metadata": {
+                "type": "object",
+                "required": [
+                  "modelName",
+                  "processingTimestamp",
+                  "rowCount",
+                  "source"
+                ],
+                "properties": {
+                  "modelName": {
+                    "type": "string"
+                  },
+                  "processingTimestamp": {
+                    "type": "string"
+                  },
+                  "rowCount": {
+                    "type": "integer"
+                  },
+                  "source": {
+                    "type": "string"
+                  }
+                }
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "confidence",
+                    "id",
+                    "namePrinted",
+                    "registeredAddress"
+                  ],
+                  "properties": {
+                    "confidence": {
+                      "type": "object",
+                      "required": [
+                        "isHighConfidence",
+                        "namePrinted",
+                        "registeredAddress"
+                      ],
+                      "properties": {
+                        "isHighConfidence": {
+                          "type": "boolean"
+                        },
+                        "namePrinted": {
+                          "type": "integer"
+                        },
+                        "registeredAddress": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "namePrinted": {
+                      "type": "string"
+                    },
+                    "registeredAddress": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "modelsAttempted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "modelsSucceeded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "needsSplicing": {
+      "type": "boolean"
+    },
+    "needsValidation": {
+      "type": "boolean"
+    },
+    "ocrConfidence": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Double"
+        },
+        {
+          "type": "integer"
+        }
+      ]
+    },
+    "passOneValidator": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ObjectId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "passTwoBasicRemaining": {
+      "type": "integer"
+    },
+    "passTwoComplete": {
+      "type": "boolean"
+    },
+    "passTwoExpertRemaining": {
+      "type": "integer"
+    },
+    "passTwoValidator": {
+      "type": "null"
+    },
+    "pendingRowBatch": {
+      "type": "array",
+      "items": {
+        "type": []
+      }
+    },
+    "percentHighConfidence": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "$ref": "#/$defs/Double"
+        }
+      ]
+    },
+    "processedComplete": {
+      "type": "boolean"
+    },
+    "processedCompleteAt": {
+      "$ref": "#/$defs/Date"
+    },
+    "recoveryMarkedAt": {
+      "type": "null"
+    },
+    "recoveryMarkedBy": {
+      "type": "null"
+    },
+    "recoveryMissingRows": {
+      "type": "integer"
+    },
+    "recoveryNotes": {
+      "type": "string"
+    },
+    "remainingToValidate": {
+      "type": "integer"
+    },
+    "results": {
+      "type": "object",
+      "required": [
+        "formFields"
+      ],
+      "properties": {
+        "additionalText": {
+          "type": "string"
+        },
+        "confidenceSummary": {
+          "type": "object",
+          "required": [
+            "highConfidenceRows",
+            "percentHighConfidence",
+            "totalRows"
+          ],
+          "properties": {
+            "highConfidenceRows": {
+              "type": "integer"
+            },
+            "percentHighConfidence": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "$ref": "#/$defs/Double"
+                }
+              ]
+            },
+            "totalRows": {
+              "type": "integer"
+            }
+          }
+        },
+        "formFields": {
+          "type": "object",
+          "required": [
+            "totalRows",
+            "totalSignatures"
+          ],
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "formType": {
+              "type": "string"
+            },
+            "otherFields": {
+              "type": "string"
+            },
+            "pageNumber": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "totalRows": {
+              "type": "integer"
+            },
+            "totalSignatures": {
+              "type": "integer"
+            }
+          }
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "required": [
+            "processingTimestamp",
+            "source",
+            "state"
+          ],
+          "properties": {
+            "processingTimestamp": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            }
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "confidence",
+              "id",
+              "isHighConfidence",
+              "namePrinted",
+              "needsValidation",
+              "registeredAddress"
+            ],
+            "properties": {
+              "approved": {
+                "type": "boolean"
+              },
+              "autoValidator": {
+                "type": "object",
+                "required": [
+                  "enabled",
+                  "name"
+                ],
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "confidence": {
+                "$ref": "#/$defs/Double"
+              },
+              "expertNeeded": {
+                "type": "boolean"
+              },
+              "fullS3Key": {
+                "type": "string"
+              },
+              "id": {
+                "type": "integer"
+              },
+              "identityId": {
+                "type": "string"
+              },
+              "isDuplicate": {
+                "type": "boolean"
+              },
+              "isHighConfidence": {
+                "type": "boolean"
+              },
+              "matchScore": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Double"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "namePrinted": {
+                "type": "string"
+              },
+              "needsValidation": {
+                "type": "boolean"
+              },
+              "passTwoComplete": {
+                "type": "boolean"
+              },
+              "registeredAddress": {
+                "type": "string"
+              },
+              "rowImageKey": {
+                "type": "string"
+              },
+              "rowImageS3Key": {
+                "type": "string"
+              },
+              "selectedVoter": {
+                "type": "object",
+                "required": [
+                  "_id",
+                  "address",
+                  "firstName",
+                  "lastName",
+                  "name"
+                ],
+                "properties": {
+                  "_id": {
+                    "$ref": "#/$defs/ObjectId"
+                  },
+                  "address": {
+                    "type": "object",
+                    "required": [
+                      "city",
+                      "county",
+                      "state",
+                      "street",
+                      "unit",
+                      "zipCode"
+                    ],
+                    "properties": {
+                      "city": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      },
+                      "county": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "street": {
+                        "type": "string"
+                      },
+                      "streetNumber": {
+                        "type": "string"
+                      },
+                      "unit": {
+                        "type": "string"
+                      },
+                      "zipCode": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "compositeKey": {
+                    "type": "string"
+                  },
+                  "dateOfBirth": {
+                    "type": "string"
+                  },
+                  "exactAddressMatch": {
+                    "type": "integer"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "fullAddressMatch": {
+                    "type": "integer"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "matchCount": {
+                    "type": "integer"
+                  },
+                  "middleName": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "nameMatchScore": {
+                    "type": "integer"
+                  },
+                  "partyAffiliation": {
+                    "type": "string"
+                  },
+                  "searchScore": {
+                    "$ref": "#/$defs/Double"
+                  },
+                  "signatures": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "_id",
+                        "createdAt",
+                        "key",
+                        "projectInfo"
+                      ],
+                      "properties": {
+                        "_id": {
+                          "$ref": "#/$defs/ObjectId"
+                        },
+                        "createdAt": {
+                          "$ref": "#/$defs/Date"
+                        },
+                        "key": {
+                          "type": "object",
+                          "required": [
+                            "rowImageKey"
+                          ],
+                          "properties": {
+                            "identityId": {
+                              "type": "string"
+                            },
+                            "rowImageKey": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "projectInfo": {
+                          "type": "object",
+                          "required": [
+                            "petitioner",
+                            "project",
+                            "reviewed",
+                            "turnIn"
+                          ],
+                          "properties": {
+                            "coordinator": {
+                              "type": "string"
+                            },
+                            "identityId": {
+                              "type": "string"
+                            },
+                            "petitioner": {
+                              "type": "string"
+                            },
+                            "project": {
+                              "type": "string"
+                            },
+                            "reviewed": {
+                              "type": "boolean"
+                            },
+                            "turnIn": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "signedDate": {
+                          "$ref": "#/$defs/Date"
+                        }
+                      }
+                    }
+                  },
+                  "streetTypeMatch": {
+                    "type": "integer"
+                  },
+                  "streetTypeMatchScore": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "voterId": {
+                    "type": "string"
+                  },
+                  "voterStatus": {
+                    "type": "string"
+                  }
+                }
+              },
+              "standardizedAddress": {
+                "type": "object",
+                "required": [
+                  "city",
+                  "state",
+                  "street",
+                  "unit",
+                  "zipCode"
+                ],
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "street": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": "string"
+                  },
+                  "zipCode": {
+                    "type": "string"
+                  }
+                }
+              },
+              "validated": {
+                "type": "boolean"
+              },
+              "validated_address": {
+                "type": "string"
+              },
+              "validatedOn": {
+                "$ref": "#/$defs/Date"
+              },
+              "validationReason": {
+                "type": "string"
+              },
+              "validationStatus": {
+                "type": "string"
+              },
+              "validator": {
+                "$ref": "#/$defs/ObjectId"
+              },
+              "validators": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "date",
+                    "step",
+                    "validatorId"
+                  ],
+                  "properties": {
+                    "date": {
+                      "$ref": "#/$defs/Date"
+                    },
+                    "step": {
+                      "type": "string"
+                    },
+                    "validatorId": {
+                      "$ref": "#/$defs/ObjectId"
+                    }
+                  }
+                }
+              },
+              "voterId": {
+                "$ref": "#/$defs/ObjectId"
+              }
+            }
+          }
+        }
+      }
+    },
+    "rowImages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "fullS3Key",
+          "rowNumber",
+          "s3Key"
+        ],
+        "properties": {
+          "fullS3Key": {
+            "type": "string"
+          },
+          "rowNumber": {
+            "type": "integer"
+          },
+          "s3Key": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rowResults": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "_id",
+          "processedAt",
+          "result"
+        ],
+        "properties": {
+          "_id": {
+            "$ref": "#/$defs/ObjectId"
+          },
+          "processedAt": {
+            "$ref": "#/$defs/Date"
+          },
+          "result": {
+            "type": "object",
+            "required": [
+              "headers",
+              "metadata",
+              "rows"
+            ],
+            "properties": {
+              "headers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "metadata": {
+                "type": "object",
+                "required": [
+                  "completionTokens",
+                  "processingTime",
+                  "promptTokens",
+                  "totalTokens"
+                ],
+                "properties": {
+                  "completionTokens": {
+                    "type": "integer"
+                  },
+                  "processingTime": {
+                    "$ref": "#/$defs/Double"
+                  },
+                  "promptTokens": {
+                    "type": "integer"
+                  },
+                  "totalTokens": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "confidence",
+                    "id",
+                    "namePrinted",
+                    "registeredAddress"
+                  ],
+                  "properties": {
+                    "confidence": {
+                      "type": "object",
+                      "required": [
+                        "isHighConfidence",
+                        "namePrinted",
+                        "registeredAddress"
+                      ],
+                      "properties": {
+                        "isHighConfidence": {
+                          "type": "boolean"
+                        },
+                        "namePrinted": {
+                          "type": "integer"
+                        },
+                        "registeredAddress": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "namePrinted": {
+                      "type": "string"
+                    },
+                    "registeredAddress": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "skippedCount": {
+      "type": "integer"
+    },
+    "stateName": {
+      "type": "string"
+    },
+    "totalRows": {
+      "type": "integer"
+    },
+    "totalSignatures": {
+      "type": "integer"
+    },
+    "townNameImageKey": {
+      "type": "string"
+    },
+    "turnIn": {
+      "$ref": "#/$defs/ObjectId"
+    },
+    "updatedAt": {
+      "$ref": "#/$defs/Date"
+    },
+    "validatedCount": {
+      "type": "integer"
+    },
+    "validator": {
+      "type": "null"
+    }
+  },
+  "$defs": {
+    "ObjectId": {
+      "type": "object",
+      "properties": {
+        "$oid": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{24}$"
+        }
+      },
+      "required": [
+        "$oid"
+      ],
+      "additionalProperties": false
+    },
+    "Double": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "$numberDouble": {
+              "enum": [
+                "Infinity",
+                "-Infinity",
+                "NaN"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Date": {
+      "type": "object",
+      "properties": {
+        "$date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "$date"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
