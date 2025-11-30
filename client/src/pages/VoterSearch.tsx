@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -29,7 +30,10 @@ import {
   FileText,
   Filter,
   Settings,
-  CheckCircle
+  CheckCircle,
+  Copy,
+  Eye,
+  EyeOff
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -90,6 +94,9 @@ export default function VoterSearch() {
     voterDb: ""
   });
   const [isConnected, setIsConnected] = useState(false);
+
+  // New State for "Challenge Mode"
+  const [showPrintedInfo, setShowPrintedInfo] = useState(true);
 
   // Effect to prefill form when ballot changes
   useEffect(() => {
@@ -200,6 +207,14 @@ export default function VoterSearch() {
     setHasSearched(true);
   };
 
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied to Clipboard",
+      description: text,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 p-6 space-y-6 font-sans text-slate-900">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -263,9 +278,23 @@ export default function VoterSearch() {
         {/* Ballot Sheet Viewer */}
         <Card className="border-slate-200 shadow-sm overflow-hidden">
           <div className="bg-slate-100/50 px-6 py-3 border-b border-slate-200 flex justify-between items-center">
-            <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-              <FileText className="w-4 h-4 text-blue-600" />
-              Ballot Sheet Entry
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                <FileText className="w-4 h-4 text-blue-600" />
+                Ballot Sheet Entry
+              </div>
+              <Separator orientation="vertical" className="h-4" />
+              <div className="flex items-center gap-2">
+                <Switch 
+                  id="show-printed" 
+                  checked={showPrintedInfo} 
+                  onCheckedChange={setShowPrintedInfo}
+                />
+                <Label htmlFor="show-printed" className="text-xs font-medium cursor-pointer flex items-center gap-1">
+                  {showPrintedInfo ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                  Show Printed Info
+                </Label>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 font-medium uppercase tracking-wider mr-2">
@@ -294,17 +323,46 @@ export default function VoterSearch() {
             </div>
           </div>
           <CardContent className="p-6 grid md:grid-cols-2 gap-8">
-            <div className="space-y-1">
+            {/* Name Section */}
+            <div className="space-y-4">
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Name Printed</h3>
-              <div className="text-2xl font-medium text-slate-900 flex items-center gap-3" data-testid="text-ballot-name">
-                {currentBallot.nameprinted}
+              
+              {/* Printed Version */}
+              {showPrintedInfo && (
+                <div className="text-2xl font-medium text-slate-900 flex items-center gap-3 border-l-4 border-blue-500 pl-3 py-1 bg-slate-50 rounded-r-md" data-testid="text-ballot-name">
+                  {currentBallot.nameprinted}
+                </div>
+              )}
+              
+              {/* Handwritten Version */}
+              <div className="relative mt-4 p-6 bg-yellow-50 border border-yellow-200 shadow-sm rotate-1 rounded-sm">
+                <div className="absolute -top-2 -left-2 w-4 h-4 bg-gray-200 rounded-full opacity-50"></div>
+                <p className="font-['Reenie_Beanie'] text-5xl text-blue-900/80 transform -rotate-1 tracking-wide leading-none" style={{ textShadow: '1px 1px 0px rgba(0,0,0,0.1)' }}>
+                  {currentBallot.nameprinted.toLowerCase()}
+                </p>
               </div>
             </div>
-            <div className="space-y-1">
+
+            {/* Address Section */}
+            <div className="space-y-4">
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Registered Address</h3>
-              <div className="text-xl text-slate-700 flex items-center gap-2" data-testid="text-ballot-address">
-                <MapPin className="w-4 h-4 text-slate-400" />
-                {currentBallot.registeredaddress.streetNumber} {currentBallot.registeredaddress.streetName}, {currentBallot.registeredaddress.city}, {currentBallot.registeredaddress.state} {currentBallot.registeredaddress.zip}
+              
+              {/* Printed Version */}
+              {showPrintedInfo && (
+                <div className="text-xl text-slate-700 flex items-center gap-2 border-l-4 border-blue-500 pl-3 py-1 bg-slate-50 rounded-r-md" data-testid="text-ballot-address">
+                  <MapPin className="w-4 h-4 text-slate-400" />
+                  {currentBallot.registeredaddress.streetNumber} {currentBallot.registeredaddress.streetName}, {currentBallot.registeredaddress.city}, {currentBallot.registeredaddress.state} {currentBallot.registeredaddress.zip}
+                </div>
+              )}
+
+              {/* Handwritten Version */}
+              <div className="relative mt-4 p-6 bg-yellow-50 border border-yellow-200 shadow-sm -rotate-1 rounded-sm">
+                 <div className="absolute -top-2 -right-2 w-4 h-4 bg-gray-200 rounded-full opacity-50"></div>
+                 <p className="font-['Reenie_Beanie'] text-4xl text-blue-900/80 transform rotate-1 leading-tight" style={{ textShadow: '1px 1px 0px rgba(0,0,0,0.1)' }}>
+                   {currentBallot.registeredaddress.streetNumber} {currentBallot.registeredaddress.streetName}
+                   <br/>
+                   {currentBallot.registeredaddress.city}, {currentBallot.registeredaddress.state}
+                 </p>
               </div>
             </div>
           </CardContent>
@@ -493,9 +551,13 @@ export default function VoterSearch() {
                     </TableHeader>
                     <TableBody>
                       {results.map((voter) => (
-                        <TableRow key={voter._id} className="hover:bg-blue-50/50 transition-colors">
+                        <TableRow 
+                          key={voter._id} 
+                          className="hover:bg-blue-50/50 transition-colors cursor-pointer group"
+                          onClick={() => handleCopy(`${voter.firstName} ${voter.lastName} - ${voter.address.streetNumber} ${voter.address.street}, ${voter.address.city}`)}
+                        >
                           <TableCell className="font-mono text-xs text-slate-500">{voter.voterId}</TableCell>
-                          <TableCell className="font-medium text-slate-900">
+                          <TableCell className="font-medium text-slate-900 group-hover:text-blue-700">
                             {voter.firstName} {voter.lastName}
                           </TableCell>
                           <TableCell className="text-slate-600">
@@ -508,7 +570,7 @@ export default function VoterSearch() {
                           </TableCell>
                           <TableCell className="text-right">
                             <Button size="sm" variant="ghost" className="h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-100">
-                              Select
+                              <Copy className="w-3 h-3 mr-1" /> Copy
                             </Button>
                           </TableCell>
                         </TableRow>
