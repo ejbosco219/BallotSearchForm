@@ -98,21 +98,17 @@ export default function VoterSearch() {
   // New State for "Challenge Mode"
   const [showPrintedInfo, setShowPrintedInfo] = useState(true);
 
-  // Effect to prefill form when ballot changes
+  // Effect to reset form when ballot changes (but NOT prefill)
   useEffect(() => {
     if (currentBallot) {
-      // Split name assuming "First Last" roughly, or just simple split
-      const nameParts = currentBallot.nameprinted.split(" ");
-      const firstName = nameParts[0] || "";
-      const lastName = nameParts.slice(1).join(" ") || "";
-
+      // Clear form data instead of prefilling
       setFormData({
-        firstName: firstName,
-        lastName: lastName,
-        streetNumber: currentBallot.registeredaddress.streetNumber,
-        streetName: currentBallot.registeredaddress.streetName
+        firstName: "",
+        lastName: "",
+        streetNumber: "",
+        streetName: ""
       });
-      // Reset results when ballot changes? Maybe, to avoid confusion.
+      // Reset results
       setResults([]);
       setHasSearched(false);
     }
@@ -335,9 +331,10 @@ export default function VoterSearch() {
               )}
               
               {/* Handwritten Version */}
-              <div className="relative mt-4 p-6 bg-yellow-50 border border-yellow-200 shadow-sm rotate-1 rounded-sm">
+              <div className="relative mt-4 p-8 bg-[#fffef0] border border-yellow-200 shadow-sm rotate-1 rounded-sm overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper.png')] opacity-50 mix-blend-multiply"></div>
                 <div className="absolute -top-2 -left-2 w-4 h-4 bg-gray-200 rounded-full opacity-50"></div>
-                <p className="font-['Reenie_Beanie'] text-5xl text-blue-900/80 transform -rotate-1 tracking-wide leading-none" style={{ textShadow: '1px 1px 0px rgba(0,0,0,0.1)' }}>
+                <p className="relative font-['Zeyada'] text-6xl text-blue-900/70 transform -rotate-2 tracking-tighter leading-none blur-[0.5px]" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.1)' }}>
                   {currentBallot.nameprinted.toLowerCase()}
                 </p>
               </div>
@@ -356,9 +353,10 @@ export default function VoterSearch() {
               )}
 
               {/* Handwritten Version */}
-              <div className="relative mt-4 p-6 bg-yellow-50 border border-yellow-200 shadow-sm -rotate-1 rounded-sm">
+              <div className="relative mt-4 p-8 bg-[#fffef0] border border-yellow-200 shadow-sm -rotate-1 rounded-sm overflow-hidden">
+                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper.png')] opacity-50 mix-blend-multiply"></div>
                  <div className="absolute -top-2 -right-2 w-4 h-4 bg-gray-200 rounded-full opacity-50"></div>
-                 <p className="font-['Reenie_Beanie'] text-4xl text-blue-900/80 transform rotate-1 leading-tight" style={{ textShadow: '1px 1px 0px rgba(0,0,0,0.1)' }}>
+                 <p className="relative font-['Zeyada'] text-5xl text-blue-900/70 transform rotate-1 leading-tight blur-[0.6px] skew-x-6" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.1)' }}>
                    {currentBallot.registeredaddress.streetNumber} {currentBallot.registeredaddress.streetName}
                    <br/>
                    {currentBallot.registeredaddress.city}, {currentBallot.registeredaddress.state}
