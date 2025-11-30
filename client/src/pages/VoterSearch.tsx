@@ -408,7 +408,7 @@ export default function VoterSearch() {
                         value={formData.firstName}
                         onChange={(e) => handleInputChange("firstName", e.target.value)}
                         className="h-9 flex-1 font-medium"
-                        placeholder="First Name"
+                        placeholder=""
                         data-testid="input-firstname"
                       />
                     </div>
@@ -437,7 +437,7 @@ export default function VoterSearch() {
                         value={formData.lastName}
                         onChange={(e) => handleInputChange("lastName", e.target.value)}
                         className="h-9 flex-1 font-medium"
-                        placeholder="Last Name"
+                        placeholder=""
                         data-testid="input-lastname"
                       />
                     </div>
@@ -452,7 +452,7 @@ export default function VoterSearch() {
                       value={formData.streetNumber}
                       onChange={(e) => handleInputChange("streetNumber", e.target.value)}
                       className="h-9 font-medium"
-                      placeholder="123"
+                      placeholder=""
                       data-testid="input-streetnumber"
                     />
                   </div>
@@ -480,7 +480,7 @@ export default function VoterSearch() {
                         value={formData.streetName}
                         onChange={(e) => handleInputChange("streetName", e.target.value)}
                         className="h-9 flex-1 font-medium"
-                        placeholder="Main St"
+                        placeholder=""
                         data-testid="input-streetname"
                       />
                     </div>
