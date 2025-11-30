@@ -95,6 +95,22 @@ export default function VoterSearch() {
   });
   const [isConnected, setIsConnected] = useState(false);
 
+  // Load config from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("voter_search_db_config");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setDbConfig(parsed);
+        if (parsed.ballotDb && parsed.voterDb) {
+          setIsConnected(true);
+        }
+      } catch (e) {
+        console.error("Failed to parse saved config", e);
+      }
+    }
+  }, []);
+
   // New State for "Challenge Mode"
   const [showPrintedInfo, setShowPrintedInfo] = useState(false);
 
@@ -135,11 +151,12 @@ export default function VoterSearch() {
   };
 
   const handleConfigSave = () => {
-    setIsConnected(true);
+    localStorage.setItem("voter_search_db_config", JSON.stringify(dbConfig));
+    setIsConnected(!!(dbConfig.ballotDb && dbConfig.voterDb));
     setConfigOpen(false);
     toast({
       title: "Configuration Saved",
-      description: "Database connection strings have been stored.",
+      description: "Database connection strings have been stored locally.",
     });
   };
 
