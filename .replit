@@ -16,7 +16,7 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 37207
+localPort = 44185
 externalPort = 3000
 
 [env]
@@ -45,3 +45,9 @@ waitForPort = 5000
 
 [agent]
 mockupState = "FULLSTACK"
+
+[userenv]
+
+[userenv.shared]
+MONGODB_URI = "mongodb+srv://certifi:jyjyjdjyylvgUU@voters-database.m6z1p.mongodb.net/main?retryWrites=true&w=majority&appName=Voter-Database"
+MONGODB_DB_NAME = "main"
