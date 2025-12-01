@@ -62,6 +62,8 @@ interface SearchFormMatchers {
   streetName: MatchType;
 }
 
+import { AdvancedSearchModal } from "@/components/AdvancedSearchModal";
+
 export default function VoterSearch() {
   const { toast } = useToast();
 
@@ -86,6 +88,9 @@ export default function VoterSearch() {
   // State for Results
   const [results, setResults] = useState<Voter[]>(mockVoters);
   const [hasSearched, setHasSearched] = useState(true);
+  
+  // State for Advanced Search Modal
+  const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(false);
 
   // State for Configuration
   const [configOpen, setConfigOpen] = useState(false);
@@ -218,6 +223,31 @@ export default function VoterSearch() {
 
     setResults(filtered);
     setHasSearched(true);
+  };
+
+  const handleAdvancedSelect = (voter: Voter) => {
+    setFormData({
+      firstName: voter.firstName,
+      lastName: voter.lastName,
+      streetNumber: voter.address.streetNumber,
+      streetName: voter.address.street
+    });
+    
+    // Reset matchers to standard defaults
+    setMatchers({
+      firstName: "Starts",
+      lastName: "Starts",
+      streetName: "Starts"
+    });
+    
+    setResults([voter]);
+    setHasSearched(true);
+    setIsAdvancedSearchOpen(false);
+    
+    toast({
+      title: "Voter Selected",
+      description: `Loaded details for ${voter.firstName} ${voter.lastName}`,
+    });
   };
 
   const handleCopy = (text: string) => {
@@ -512,6 +542,17 @@ export default function VoterSearch() {
                       <Search className="w-4 h-4 mr-2" />
                       Search Database
                     </Button>
+                    <div className="flex justify-center pt-2">
+                      <Button 
+                        type="button" 
+                        variant="link" 
+                        size="sm" 
+                        className="text-slate-500 h-auto p-0 hover:text-blue-600"
+                        onClick={() => setIsAdvancedSearchOpen(true)}
+                      >
+                        Advanced Search
+                      </Button>
+                    </div>
                   </div>
 
                 </form>
@@ -600,6 +641,12 @@ export default function VoterSearch() {
           </div>
         </div>
       </div>
+      
+      <AdvancedSearchModal 
+        open={isAdvancedSearchOpen} 
+        onOpenChange={setIsAdvancedSearchOpen} 
+        onSelectVoter={handleAdvancedSelect} 
+      />
     </div>
   );
 }
