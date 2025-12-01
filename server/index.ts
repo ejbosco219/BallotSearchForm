@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { connectToMongoDB } from "./mongodb";
 
 const app = express();
 const httpServer = createServer(app);
@@ -60,6 +61,15 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Connect to MongoDB
+  try {
+    await connectToMongoDB();
+    log("MongoDB connected successfully");
+  } catch (error) {
+    log(`MongoDB connection failed: ${error}`, "mongodb");
+    // Continue without MongoDB - will fail on first query
+  }
+  
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

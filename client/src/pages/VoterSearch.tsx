@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { mockBallotSheets, mockVoters, BallotSheetItem, Voter } from "@/data/mockData";
+import { mockBallotSheets, BallotSheetItem } from "@/data/mockData";
+import { Voter } from "@/types/voter";
+import { searchVoters } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -86,8 +88,9 @@ export default function VoterSearch() {
   });
 
   // State for Results
-  const [results, setResults] = useState<Voter[]>(mockVoters);
-  const [hasSearched, setHasSearched] = useState(true);
+  const [results, setResults] = useState<Voter[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   
   // State for Advanced Search Modal
   const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(false);
@@ -130,8 +133,8 @@ export default function VoterSearch() {
         streetName: ""
       });
       // Reset results
-      setResults(mockVoters);
-      setHasSearched(true);
+      setResults([]);
+      setHasSearched(false);
     }
   }, [currentBallotIndex, currentBallot]);
 
@@ -175,54 +178,52 @@ export default function VoterSearch() {
     return parts.length > 0 ? parts.join(" AND ") : "Empty Query";
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Filtering Logic
-    const filtered = mockVoters.filter(voter => {
-      // First Name Match
-      const fnInput = formData.firstName.toLowerCase();
-      const fnTarget = voter.firstName.toLowerCase();
-      let fnMatch = true;
-      if (fnInput) {
-        if (matchers.firstName === "Starts") fnMatch = fnTarget.startsWith(fnInput);
-        else if (matchers.firstName === "Within") fnMatch = fnTarget.includes(fnInput);
-        else if (matchers.firstName === "Ends") fnMatch = fnTarget.endsWith(fnInput);
-      }
-
-      // Last Name Match
-      const lnInput = formData.lastName.toLowerCase();
-      const lnTarget = voter.lastName.toLowerCase();
-      let lnMatch = true;
-      if (lnInput) {
-        if (matchers.lastName === "Starts") lnMatch = lnTarget.startsWith(lnInput);
-        else if (matchers.lastName === "Within") lnMatch = lnTarget.includes(lnInput);
-        else if (matchers.lastName === "Ends") lnMatch = lnTarget.endsWith(lnInput);
-      }
-
-      // Street Number Match (Exact)
-      const snNumInput = formData.streetNumber;
-      const snNumTarget = voter.address.streetNumber;
-      let snNumMatch = true;
-      if (snNumInput) {
-        snNumMatch = snNumTarget === snNumInput;
-      }
-
-      // Street Name Match
-      const stInput = formData.streetName.toLowerCase();
-      const stTarget = voter.address.street.toLowerCase();
-      let stMatch = true;
-      if (stInput) {
-        if (matchers.streetName === "Starts") stMatch = stTarget.startsWith(stInput);
-        else if (matchers.streetName === "Within") stMatch = stTarget.includes(stInput);
-        else if (matchers.streetName === "Ends") stMatch = stTarget.endsWith(stInput);
-      }
-
-      return fnMatch && lnMatch && snNumMatch && stMatch;
-    });
-
-    setResults(filtered);
+    setIsSearching(true);
     setHasSearched(true);
+    
+    try {
+      const searchParams: any = {};
+      
+      if (formData.firstName) {
+        searchParams.firstName = {
+          value: formData.firstName,
+          match: matchers.firstName.toLowerCase() as 'starts' | 'within' | 'ends'
+        };
+      }
+      
+      if (formData.lastName) {
+        searchParams.lastName = {
+          value: formData.lastName,
+          match: matchers.lastName.toLowerCase() as 'starts' | 'within' | 'ends'
+        };
+      }
+      
+      if (formData.streetNumber) {
+        searchParams.streetNumber = formData.streetNumber;
+      }
+      
+      if (formData.streetName) {
+        searchParams.streetName = {
+          value: formData.streetName,
+          match: matchers.streetName.toLowerCase() as 'starts' | 'within' | 'ends'
+        };
+      }
+      
+      const voters = await searchVoters(searchParams);
+      setResults(voters);
+    } catch (error) {
+      console.error('Search error:', error);
+      toast({
+        title: "Search Failed",
+        description: "Failed to search voters. Please check your database connection.",
+        variant: "destructive"
+      });
+      setResults([]);
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const handleAdvancedSelect = (voter: Voter) => {
@@ -538,9 +539,14 @@ export default function VoterSearch() {
                       <span className="font-bold text-blue-600">QUERY: </span>
                       {generateQueryString()}
                     </div>
-                    <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 shadow-md" data-testid="button-submit">
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-blue-600 hover:bg-blue-700 shadow-md" 
+                      data-testid="button-submit"
+                      disabled={isSearching}
+                    >
                       <Search className="w-4 h-4 mr-2" />
-                      Search Database
+                      {isSearching ? "Searching..." : "Search Database"}
                     </Button>
                     <div className="flex justify-center pt-2">
                       <Button 

@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { mockVoters, Voter } from '@/data/mockData';
-import { Search, ArrowUpDown, Copy, ChevronLeft, ChevronRight, ClipboardCopy } from 'lucide-react';
+import { Voter } from '@/types/voter';
+import { Search, ArrowUpDown, Copy, ChevronLeft, ChevronRight, ClipboardCopy, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
+import { searchVoters } from '@/lib/api';
 
 interface AdvancedSearchModalProps {
   open: boolean;
@@ -50,6 +51,7 @@ export function AdvancedSearchModal({ open, onOpenChange, onSelectVoter }: Advan
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [triggeredSearch, setTriggeredSearch] = useState(false);
   const [results, setResults] = useState<Voter[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   // Reset page when filters change
   useEffect(() => {
@@ -77,51 +79,51 @@ export function AdvancedSearchModal({ open, onOpenChange, onSelectVoter }: Advan
     }));
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     setTriggeredSearch(true);
+    setIsSearching(true);
     
-    let result = [...mockVoters];
-
-    // Filter
-    if (filters.firstName) {
-      const val = filters.firstName.toLowerCase();
-      result = result.filter(v => {
-        const target = v.firstName.toLowerCase();
-        if (matchers.firstName === 'Starts') return target.startsWith(val);
-        if (matchers.firstName === 'Within') return target.includes(val);
-        if (matchers.firstName === 'Ends') return target.endsWith(val);
-        return false;
+    try {
+      const searchParams: any = {};
+      
+      if (filters.firstName) {
+        searchParams.firstName = {
+          value: filters.firstName,
+          match: matchers.firstName.toLowerCase() as 'starts' | 'within' | 'ends'
+        };
+      }
+      
+      if (filters.lastName) {
+        searchParams.lastName = {
+          value: filters.lastName,
+          match: matchers.lastName.toLowerCase() as 'starts' | 'within' | 'ends'
+        };
+      }
+      
+      if (filters.streetNumber) {
+        searchParams.streetNumber = filters.streetNumber;
+      }
+      
+      if (filters.streetName) {
+        searchParams.streetName = {
+          value: filters.streetName,
+          match: matchers.streetName.toLowerCase() as 'starts' | 'within' | 'ends'
+        };
+      }
+      
+      const voters = await searchVoters(searchParams);
+      setResults(voters);
+    } catch (error) {
+      console.error('Search error:', error);
+      toast({
+        title: "Search Failed",
+        description: "Failed to search voters. Please check your connection.",
+        variant: "destructive"
       });
+      setResults([]);
+    } finally {
+      setIsSearching(false);
     }
-    if (filters.lastName) {
-      const val = filters.lastName.toLowerCase();
-      result = result.filter(v => {
-        const target = v.lastName.toLowerCase();
-        if (matchers.lastName === 'Starts') return target.startsWith(val);
-        if (matchers.lastName === 'Within') return target.includes(val);
-        if (matchers.lastName === 'Ends') return target.endsWith(val);
-        return false;
-      });
-    }
-    if (filters.streetNumber) {
-      // Exact match for street number usually makes sense, but let's keep it simple "includes" for now based on user prompt implying exactness or partial?
-      // The prompt asked for Starts/Within/Ends for First, Last, Street Name. Street Number was not specified, assuming direct match or includes.
-      // Previous logic was "includes". Let's stick to includes for flexibility or exact if usually numeric.
-      // Let's use includes to be safe unless specified otherwise.
-      result = result.filter(v => v.address.streetNumber.includes(filters.streetNumber));
-    }
-    if (filters.streetName) {
-      const val = filters.streetName.toLowerCase();
-      result = result.filter(v => {
-        const target = v.address.street.toLowerCase();
-        if (matchers.streetName === 'Starts') return target.startsWith(val);
-        if (matchers.streetName === 'Within') return target.includes(val);
-        if (matchers.streetName === 'Ends') return target.endsWith(val);
-        return false;
-      });
-    }
-
-    setResults(result);
   };
 
   const sortedResults = useMemo(() => {
@@ -292,8 +294,20 @@ export function AdvancedSearchModal({ open, onOpenChange, onSelectVoter }: Advan
 
             {/* Search Button */}
             <div className="md:col-span-1">
-              <Button size="sm" className="w-full h-8 bg-blue-600 hover:bg-blue-700 text-xs" onClick={handleSearch}>
-                Search
+              <Button 
+                size="sm" 
+                className="w-full h-8 bg-blue-600 hover:bg-blue-700 text-xs" 
+                onClick={handleSearch}
+                disabled={isSearching}
+              >
+                {isSearching ? (
+                  <>
+                    <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                    Searching...
+                  </>
+                ) : (
+                  'Search'
+                )}
               </Button>
             </div>
           </div>
